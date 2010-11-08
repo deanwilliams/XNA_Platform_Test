@@ -54,7 +54,7 @@ namespace PlatformTest
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             // TODO: use this.Content to load your game content here
-            backgroundTexture = Content.Load<Texture2D>(@"background");
+            backgroundTexture = Content.Load<Texture2D>(@"Images\background");
         }
 
         /// <summary>
