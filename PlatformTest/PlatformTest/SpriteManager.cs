@@ -38,11 +38,11 @@ namespace PlatformTest
             //    new Point(6, 8), new Vector2(6, 6), 60);
 
             player = new UserControlledSprite(
-                Game.Content.Load<Texture2D>(@"player"),
+                Game.Content.Load<Texture2D>(@"Images\player"),
                 new Vector2(35, 337), new Point(40, 48), 10, new Point(0, 0),
                 new Point(6, 8), new Vector2(6, 6), 60);
 
-            debugFont = Game.Content.Load<SpriteFont>(@"arial");
+            debugFont = Game.Content.Load<SpriteFont>(@"Fonts\arial");
 
             base.LoadContent();
         }
