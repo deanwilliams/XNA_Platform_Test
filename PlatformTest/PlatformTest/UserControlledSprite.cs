@@ -26,9 +26,9 @@ namespace PlatformTest
         private PlayerState currentState = PlayerState.Standing;
         private FacingDirection facingDirecton = FacingDirection.Right;
 
-        private const float Acceleration = 10f;
-        private const float GroundDragFactor = 1f;
-        //private Vector2 DragFactor = new Vector2(0.48f, 1f);
+        private const float Acceleration = 500f;
+        //private const float GroundDragFactor = 1f;
+        private Vector2 DragFactor = new Vector2(0.48f, 1f);
 
         private Vector2 resultingForce;
 
@@ -106,12 +106,13 @@ namespace PlatformTest
             Vector2 velocity = Vector2.Zero;
 
             velocity.X = direction.X * Acceleration * elapsed;
-            velocity.X *= GroundDragFactor;
+            //velocity.X *= GroundDragFactor;
             if (velocity.X < 0)
                 velocity.X = velocity.X * -1;
             resultingForce += direction * velocity;
-            //resultingForce *= DragFactor;
+            resultingForce *= DragFactor;
             resultingForce.X = MathHelper.Clamp(resultingForce.X, -maxSpeed.X, maxSpeed.X);
+            resultingForce = new Vector2((float)Math.Round(resultingForce.X), (float)Math.Round(resultingForce.Y));
         }
 
         public float GetInputDirectionX()
