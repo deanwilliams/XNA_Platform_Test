@@ -79,8 +79,8 @@ namespace PlatformTest
             spriteBatch.Begin(SpriteSortMode.FrontToBack, BlendState.AlphaBlend);
             player.Draw(gameTime, spriteBatch);
 
-            //spriteBatch.DrawString(debugFont, "Velocity x = " + player.GetVelocityX(), new Vector2(10, 10), Color.White, 0, Vector2.Zero, 1, SpriteEffects.None, 1);
-            //spriteBatch.DrawString(debugFont, "Direction x = " + player.GetVelocityX(), new Vector2(10, 30), Color.White, 0, Vector2.Zero, 1, SpriteEffects.None, 1);
+            spriteBatch.DrawString(debugFont, "Input Direction = " + player.GetInputDirectionX(), new Vector2(10, 10), Color.White, 0, Vector2.Zero, 1, SpriteEffects.None, 1);
+            spriteBatch.DrawString(debugFont, "Resulting Force = " + player.GetResultingForceX(), new Vector2(10, 30), Color.White, 0, Vector2.Zero, 1, SpriteEffects.None, 1);
 
             spriteBatch.End();
 

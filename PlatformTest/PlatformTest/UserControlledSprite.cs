@@ -26,6 +26,12 @@ namespace PlatformTest
         private PlayerState currentState = PlayerState.Standing;
         private FacingDirection facingDirecton = FacingDirection.Right;
 
+        private const float Acceleration = 10f;
+        private const float GroundDragFactor = 1f;
+        //private Vector2 DragFactor = new Vector2(0.48f, 1f);
+
+        private Vector2 resultingForce;
+
         public override Vector2 direction
         {
             get
@@ -70,31 +76,59 @@ namespace PlatformTest
                     }
                 }
 
-                return inputDirection * speed;
+                return inputDirection;
             }
         }
 
-        public UserControlledSprite(Texture2D textureImage, Vector2 position, Point frameSize, int collisionOffset, Point currentFrame, Point sheetSize, Vector2 speed)
-            : base(textureImage, position, frameSize, collisionOffset, currentFrame, sheetSize, speed)
+        public UserControlledSprite(Texture2D textureImage, Vector2 position, Point frameSize, int collisionOffset, Point currentFrame, Point sheetSize, Vector2 maxSpeed)
+            : base(textureImage, position, frameSize, collisionOffset, currentFrame, sheetSize, maxSpeed)
         {
         }
 
-        public UserControlledSprite(Texture2D textureImage, Vector2 position, Point frameSize, int collisionOffset, Point currentFrame, Point sheetSize, Vector2 speed, int millisecondsPerFrame)
-            : base(textureImage, position, frameSize, collisionOffset, currentFrame, sheetSize, speed, millisecondsPerFrame)
+        public UserControlledSprite(Texture2D textureImage, Vector2 position, Point frameSize, int collisionOffset, Point currentFrame, Point sheetSize, Vector2 maxSpeed, int millisecondsPerFrame)
+            : base(textureImage, position, frameSize, collisionOffset, currentFrame, sheetSize, maxSpeed, millisecondsPerFrame)
         {
         }
 
         public override void Update(GameTime gameTime, Rectangle clientBounds)
         {
-            calculateCurrentFrame(gameTime);
-            position += direction;
+            CalculateCurrentFrame(gameTime);
+            ApplyPhysics(gameTime);
+            position += resultingForce;
+        }
+
+        /// <summary>
+        /// Apply E-MC2
+        /// </summary>
+        private void ApplyPhysics(GameTime gameTime)
+        {
+            float elapsed = (float)gameTime.ElapsedGameTime.TotalSeconds;
+            Vector2 velocity = Vector2.Zero;
+
+            velocity.X = direction.X * Acceleration * elapsed;
+            velocity.X *= GroundDragFactor;
+            if (velocity.X < 0)
+                velocity.X = velocity.X * -1;
+            resultingForce += direction * velocity;
+            //resultingForce *= DragFactor;
+            resultingForce.X = MathHelper.Clamp(resultingForce.X, -maxSpeed.X, maxSpeed.X);
+        }
+
+        public float GetInputDirectionX()
+        {
+            return direction.X;
+        }
+
+        public float GetResultingForceX()
+        {
+            return resultingForce.X;
         }
 
         /// <summary>
         /// Calculate the current frame
         /// </summary>
         /// <param name="gameTime"></param>
-        private void calculateCurrentFrame(GameTime gameTime)
+        private void CalculateCurrentFrame(GameTime gameTime)
         {
             timeSinceLastFrame += gameTime.ElapsedGameTime.Milliseconds;
             if (timeSinceLastFrame > millisecondsPerFrame)

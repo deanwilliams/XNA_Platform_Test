@@ -17,7 +17,7 @@ namespace PlatformTest
         protected Point sheetSize;
         protected int timeSinceLastFrame = 0;
         protected int millisecondsPerFrame;
-        protected Vector2 speed;
+        protected Vector2 maxSpeed;
         const int defaultMillisecondsPerFrame = 16;
 
         public abstract Vector2 direction
@@ -51,9 +51,9 @@ namespace PlatformTest
         /// <param name="collisionOffset"></param>
         /// <param name="currentFrame"></param>
         /// <param name="sheetSize"></param>
-        /// <param name="speed"></param>
-        public Sprite(Texture2D textureImage, Vector2 position, Point frameSize, int collisionOffset, Point currentFrame, Point sheetSize, Vector2 speed)
-            : this(textureImage, position, frameSize, collisionOffset, currentFrame, sheetSize, speed, defaultMillisecondsPerFrame)
+        /// <param name="maxSpeed"></param>
+        public Sprite(Texture2D textureImage, Vector2 position, Point frameSize, int collisionOffset, Point currentFrame, Point sheetSize, Vector2 maxSpeed)
+            : this(textureImage, position, frameSize, collisionOffset, currentFrame, sheetSize, maxSpeed, defaultMillisecondsPerFrame)
         {
         }
 
@@ -66,9 +66,9 @@ namespace PlatformTest
         /// <param name="collisionOffset"></param>
         /// <param name="currentFrame"></param>
         /// <param name="sheetSize"></param>
-        /// <param name="speed"></param>
+        /// <param name="maxSpeed"></param>
         /// <param name="millisecondsPerFrame"></param>
-        public Sprite(Texture2D textureImage, Vector2 position, Point frameSize, int collisionOffset, Point currentFrame, Point sheetSize, Vector2 speed, int millisecondsPerFrame)
+        public Sprite(Texture2D textureImage, Vector2 position, Point frameSize, int collisionOffset, Point currentFrame, Point sheetSize, Vector2 maxSpeed, int millisecondsPerFrame)
         {
             this.textureImage = textureImage;
             this.position = position;
@@ -76,7 +76,7 @@ namespace PlatformTest
             this.collisionOffset = collisionOffset;
             this.currentFrame = currentFrame;
             this.sheetSize = sheetSize;
-            this.speed = speed;
+            this.maxSpeed = maxSpeed;
             this.millisecondsPerFrame = millisecondsPerFrame;
         }
 
