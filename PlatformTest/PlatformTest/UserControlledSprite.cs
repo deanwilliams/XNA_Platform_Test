@@ -24,10 +24,24 @@ namespace PlatformTest
         }
 
         private PlayerState currentState = PlayerState.Standing;
+
         private FacingDirection facingDirecton = FacingDirection.Right;
 
         private const float Acceleration = 20f;
         private const float GroundDragFactor = 5f;
+
+        private const float MaxJumpTime = 0.35f;
+        //private const float JumpLaunchVelocity = -3500.0f;
+        private const float GravityAcceleration = 10f;
+        private const float JumpLaunchVelocity = -20f;
+        private const float JumpControlPower = 0.14f;
+        private const float MaxFallSpeed = 5.0f;
+
+        private float jumpTime;
+        private bool isJumping;
+        private bool wasJumping;
+
+        private float debugVelocityY = 0;
 
         private Vector2 resultingForce;
 
@@ -58,8 +72,13 @@ namespace PlatformTest
                     if (Keyboard.GetState().IsKeyDown(Keys.Space))
                     {
                         currentState = PlayerState.Jumping;
+                        isJumping = true;
                         controllerDirection.Y += 1;
                         currentFrame.X = 0;
+                    }
+                    else
+                    {
+                        controllerDirection.Y -= 0;
                     }
                 }
                 else
@@ -114,9 +133,54 @@ namespace PlatformTest
             Vector2 velocity = Vector2.Zero;
             
             velocity.X = Acceleration * elapsed;
+            velocity.Y = MathHelper.Clamp(velocity.Y + GravityAcceleration * elapsed, -MaxFallSpeed, MaxFallSpeed);
+            velocity.Y = DoJump(velocity.Y, gameTime);
 
             resultingForce += (inputDirection * velocity);
             resultingForce.X = MathHelper.Clamp(resultingForce.X, -maxSpeed.X, maxSpeed.X);
+        }
+
+        /// <summary>
+        /// Do Jump
+        /// </summary>
+        /// <param name="velocityY"></param>
+        /// <param name="gameTime"></param>
+        /// <returns></returns>
+        private float DoJump(float velocityY, GameTime gameTime)
+        {
+            // If the player wants to jump
+            if (isJumping)
+            {
+                // Begin or continue a jump
+                if (!wasJumping || jumpTime > 0.0f)
+                {
+                    //if (jumpTime == 0.0f)
+                    //    jumpSound.Play();
+
+                    jumpTime += (float)gameTime.ElapsedGameTime.TotalSeconds;
+                }
+
+                // If we are in the ascent of the jump
+                if (0.0f < jumpTime && jumpTime <= MaxJumpTime)
+                {
+                    // Fully override the vertical velocity with a power curve that gives players more control over the top of the jump
+                    velocityY = JumpLaunchVelocity * (1.0f - (float)Math.Pow(jumpTime / MaxJumpTime, JumpControlPower));
+                    debugVelocityY = velocityY;
+                }
+                else
+                {
+                    // Reached the apex of the jump
+                    jumpTime = 0.0f;
+                }
+            }
+            else
+            {
+                // Continues not jumping or cancels a jump in progress
+                jumpTime = 0.0f;
+            }
+            wasJumping = isJumping;
+            
+            return velocityY;
         }
 
         /// <summary>
@@ -143,9 +207,39 @@ namespace PlatformTest
             return inputDirection.X;
         }
 
+        public float GetInputDirectionY()
+        {
+            return inputDirection.Y;
+        }
+
         public float GetResultingForceX()
         {
             return resultingForce.X;
+        }
+
+        public float GetResultingForceY()
+        {
+            return resultingForce.Y;
+        }
+
+        public float GetDebugVelocityY()
+        {
+            return debugVelocityY;
+        }
+
+        public float GetJumpTime()
+        {
+            return jumpTime;
+        }
+
+        public bool GetIsJumping()
+        {
+            return isJumping;
+        }
+
+        public bool GetWasJumping()
+        {
+            return wasJumping;
         }
 
         /// <summary>
@@ -180,7 +274,10 @@ namespace PlatformTest
                 {
                     currentFrame.X = 0;
                     if (currentState == PlayerState.Jumping)
+                    {
                         currentState = PlayerState.Standing;
+                        isJumping = false;
+                    }
                 }
             }
         }
