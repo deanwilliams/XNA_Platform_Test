@@ -20,7 +20,7 @@ namespace PlatformTest
         protected Vector2 maxSpeed;
         const int defaultMillisecondsPerFrame = 16;
 
-        public abstract Vector2 direction
+        public abstract Vector2 inputDirection
         {
             get;
         }

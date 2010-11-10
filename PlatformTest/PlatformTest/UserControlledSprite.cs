@@ -26,17 +26,17 @@ namespace PlatformTest
         private PlayerState currentState = PlayerState.Standing;
         private FacingDirection facingDirecton = FacingDirection.Right;
 
-        private const float Acceleration = 500f;
-        //private const float GroundDragFactor = 1f;
-        private Vector2 DragFactor = new Vector2(0.48f, 1f);
+        private const float Acceleration = 20f;
+        private const float GroundDragFactor = 5f;
+        //private Vector2 DragFactor = new Vector2(0.48f, 1f);
 
         private Vector2 resultingForce;
 
-        public override Vector2 direction
+        public override Vector2 inputDirection
         {
             get
             {
-                Vector2 inputDirection = Vector2.Zero;
+                Vector2 controllerDirection = Vector2.Zero;
 
                 if (currentState != PlayerState.Jumping)
                 {
@@ -44,13 +44,13 @@ namespace PlatformTest
                     {
                         currentState = PlayerState.Running;
                         facingDirecton = FacingDirection.Left;
-                        inputDirection.X -= 1;
+                        controllerDirection.X -= 1;
                     }
                     else if (Keyboard.GetState().IsKeyDown(Keys.Right))
                     {
                         currentState = PlayerState.Running;
                         facingDirecton = FacingDirection.Right;
-                        inputDirection.X += 1;
+                        controllerDirection.X += 1;
                     }
                     else
                     {
@@ -67,16 +67,16 @@ namespace PlatformTest
                     if (Keyboard.GetState().IsKeyDown(Keys.Left))
                     {
                         facingDirecton = FacingDirection.Left;
-                        inputDirection.X -= 1;
+                        controllerDirection.X -= 1;
                     }
                     else if (Keyboard.GetState().IsKeyDown(Keys.Right))
                     {
                         facingDirecton = FacingDirection.Right;
-                        inputDirection.X += 1;
+                        controllerDirection.X += 1;
                     }
                 }
 
-                return inputDirection;
+                return controllerDirection;
             }
         }
 
@@ -92,32 +92,49 @@ namespace PlatformTest
 
         public override void Update(GameTime gameTime, Rectangle clientBounds)
         {
+            Vector2 previousPosition = position;
             CalculateCurrentFrame(gameTime);
-            ApplyPhysics(gameTime);
+            ApplyAcceleration(gameTime);
             position += resultingForce;
+            if (position.X != previousPosition.X)
+                ApplyFriction(gameTime);
+            if (position.X == previousPosition.X)
+                resultingForce.X = 0;
         }
 
         /// <summary>
         /// Apply E-MC2
         /// </summary>
-        private void ApplyPhysics(GameTime gameTime)
+        private void ApplyAcceleration(GameTime gameTime)
         {
             float elapsed = (float)gameTime.ElapsedGameTime.TotalSeconds;
             Vector2 velocity = Vector2.Zero;
+            
+            velocity.X = Acceleration * elapsed;
 
-            velocity.X = direction.X * Acceleration * elapsed;
-            //velocity.X *= GroundDragFactor;
-            if (velocity.X < 0)
-                velocity.X = velocity.X * -1;
-            resultingForce += direction * velocity;
-            resultingForce *= DragFactor;
+            resultingForce += (inputDirection * velocity);
             resultingForce.X = MathHelper.Clamp(resultingForce.X, -maxSpeed.X, maxSpeed.X);
-            resultingForce = new Vector2((float)Math.Round(resultingForce.X), (float)Math.Round(resultingForce.Y));
+        }
+
+        /// <summary>
+        /// Apply Friction
+        /// </summary>
+        /// <param name="gameTime"></param>
+        private void ApplyFriction(GameTime gameTime)
+        {
+            float elapsed = (float)gameTime.ElapsedGameTime.TotalSeconds;
+            Vector2 friction = Vector2.Zero;
+            friction.X = GroundDragFactor * elapsed;
+
+            if (resultingForce.X > 0)
+                resultingForce += friction * -1;
+            else
+                resultingForce += friction;
         }
 
         public float GetInputDirectionX()
         {
-            return direction.X;
+            return inputDirection.X;
         }
 
         public float GetResultingForceX()
