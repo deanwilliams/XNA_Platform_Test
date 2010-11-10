@@ -26,11 +26,16 @@ namespace PlatformTest
         private PlayerState currentState = PlayerState.Standing;
         private FacingDirection facingDirecton = FacingDirection.Right;
 
-        public override Vector2 direction
+        private const float Acceleration = 20f;
+        private const float GroundDragFactor = 5f;
+
+        private Vector2 resultingForce;
+
+        public override Vector2 inputDirection
         {
             get
             {
-                Vector2 inputDirection = Vector2.Zero;
+                Vector2 controllerDirection = Vector2.Zero;
 
                 if (currentState != PlayerState.Jumping)
                 {
@@ -38,13 +43,13 @@ namespace PlatformTest
                     {
                         currentState = PlayerState.Running;
                         facingDirecton = FacingDirection.Left;
-                        inputDirection.X -= 1;
+                        controllerDirection.X -= 1;
                     }
                     else if (Keyboard.GetState().IsKeyDown(Keys.Right))
                     {
                         currentState = PlayerState.Running;
                         facingDirecton = FacingDirection.Right;
-                        inputDirection.X += 1;
+                        controllerDirection.X += 1;
                     }
                     else
                     {
@@ -53,6 +58,7 @@ namespace PlatformTest
                     if (Keyboard.GetState().IsKeyDown(Keys.Space))
                     {
                         currentState = PlayerState.Jumping;
+                        controllerDirection.Y += 1;
                         currentFrame.X = 0;
                     }
                 }
@@ -61,40 +67,92 @@ namespace PlatformTest
                     if (Keyboard.GetState().IsKeyDown(Keys.Left))
                     {
                         facingDirecton = FacingDirection.Left;
-                        inputDirection.X -= 1;
+                        controllerDirection.X -= 1;
                     }
                     else if (Keyboard.GetState().IsKeyDown(Keys.Right))
                     {
                         facingDirecton = FacingDirection.Right;
-                        inputDirection.X += 1;
+                        controllerDirection.X += 1;
                     }
                 }
 
-                return inputDirection * speed;
+                return controllerDirection;
             }
         }
 
-        public UserControlledSprite(Texture2D textureImage, Vector2 position, Point frameSize, int collisionOffset, Point currentFrame, Point sheetSize, Vector2 speed)
-            : base(textureImage, position, frameSize, collisionOffset, currentFrame, sheetSize, speed)
+        public UserControlledSprite(Texture2D textureImage, Vector2 position, Point frameSize, int collisionOffset, Point currentFrame, Point sheetSize, Vector2 maxSpeed)
+            : base(textureImage, position, frameSize, collisionOffset, currentFrame, sheetSize, maxSpeed)
         {
         }
 
-        public UserControlledSprite(Texture2D textureImage, Vector2 position, Point frameSize, int collisionOffset, Point currentFrame, Point sheetSize, Vector2 speed, int millisecondsPerFrame)
-            : base(textureImage, position, frameSize, collisionOffset, currentFrame, sheetSize, speed, millisecondsPerFrame)
+        public UserControlledSprite(Texture2D textureImage, Vector2 position, Point frameSize, int collisionOffset, Point currentFrame, Point sheetSize, Vector2 maxSpeed, int millisecondsPerFrame)
+            : base(textureImage, position, frameSize, collisionOffset, currentFrame, sheetSize, maxSpeed, millisecondsPerFrame)
         {
         }
 
+        /// <summary>
+        /// Update method
+        /// </summary>
+        /// <param name="gameTime"></param>
+        /// <param name="clientBounds"></param>
         public override void Update(GameTime gameTime, Rectangle clientBounds)
         {
-            calculateCurrentFrame(gameTime);
-            position += direction;
+            Vector2 previousPosition = position;
+            CalculateCurrentFrame(gameTime);
+            ApplyAcceleration(gameTime);
+            if (resultingForce.X != 0)
+                ApplyFriction(gameTime);
+            position += resultingForce;
+        }
+
+        /// <summary>
+        /// Apply E-MC2
+        /// </summary>
+        private void ApplyAcceleration(GameTime gameTime)
+        {
+            float elapsed = (float)gameTime.ElapsedGameTime.TotalSeconds;
+            Vector2 velocity = Vector2.Zero;
+            
+            velocity.X = Acceleration * elapsed;
+
+            resultingForce += (inputDirection * velocity);
+            resultingForce.X = MathHelper.Clamp(resultingForce.X, -maxSpeed.X, maxSpeed.X);
+        }
+
+        /// <summary>
+        /// Apply Friction
+        /// </summary>
+        /// <param name="gameTime"></param>
+        private void ApplyFriction(GameTime gameTime)
+        {
+            Vector2 originalForce = resultingForce;
+            float elapsed = (float)gameTime.ElapsedGameTime.TotalSeconds;
+            Vector2 friction = Vector2.Zero;
+            friction.X = GroundDragFactor * elapsed;
+
+            if (resultingForce.X > 0)
+                resultingForce += friction * -1;
+            else if (resultingForce.X < 0)
+                resultingForce += friction;
+            if (resultingForce.X < 0 && originalForce.X > 0 || resultingForce.X > 0 && originalForce.X < 0)
+                resultingForce.X = 0;
+        }
+
+        public float GetInputDirectionX()
+        {
+            return inputDirection.X;
+        }
+
+        public float GetResultingForceX()
+        {
+            return resultingForce.X;
         }
 
         /// <summary>
         /// Calculate the current frame
         /// </summary>
         /// <param name="gameTime"></param>
-        private void calculateCurrentFrame(GameTime gameTime)
+        private void CalculateCurrentFrame(GameTime gameTime)
         {
             timeSinceLastFrame += gameTime.ElapsedGameTime.Milliseconds;
             if (timeSinceLastFrame > millisecondsPerFrame)
