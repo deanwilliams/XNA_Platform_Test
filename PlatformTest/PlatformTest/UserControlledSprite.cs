@@ -28,7 +28,6 @@ namespace PlatformTest
 
         private const float Acceleration = 20f;
         private const float GroundDragFactor = 5f;
-        //private Vector2 DragFactor = new Vector2(0.48f, 1f);
 
         private Vector2 resultingForce;
 
@@ -59,6 +58,7 @@ namespace PlatformTest
                     if (Keyboard.GetState().IsKeyDown(Keys.Space))
                     {
                         currentState = PlayerState.Jumping;
+                        controllerDirection.Y += 1;
                         currentFrame.X = 0;
                     }
                 }
@@ -90,16 +90,19 @@ namespace PlatformTest
         {
         }
 
+        /// <summary>
+        /// Update method
+        /// </summary>
+        /// <param name="gameTime"></param>
+        /// <param name="clientBounds"></param>
         public override void Update(GameTime gameTime, Rectangle clientBounds)
         {
             Vector2 previousPosition = position;
             CalculateCurrentFrame(gameTime);
             ApplyAcceleration(gameTime);
-            position += resultingForce;
-            if (position.X != previousPosition.X)
+            if (resultingForce.X != 0)
                 ApplyFriction(gameTime);
-            if (position.X == previousPosition.X)
-                resultingForce.X = 0;
+            position += resultingForce;
         }
 
         /// <summary>
@@ -122,14 +125,17 @@ namespace PlatformTest
         /// <param name="gameTime"></param>
         private void ApplyFriction(GameTime gameTime)
         {
+            Vector2 originalForce = resultingForce;
             float elapsed = (float)gameTime.ElapsedGameTime.TotalSeconds;
             Vector2 friction = Vector2.Zero;
             friction.X = GroundDragFactor * elapsed;
 
             if (resultingForce.X > 0)
                 resultingForce += friction * -1;
-            else
+            else if (resultingForce.X < 0)
                 resultingForce += friction;
+            if (resultingForce.X < 0 && originalForce.X > 0 || resultingForce.X > 0 && originalForce.X < 0)
+                resultingForce.X = 0;
         }
 
         public float GetInputDirectionX()
