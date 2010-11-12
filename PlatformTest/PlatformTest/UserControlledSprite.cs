@@ -30,16 +30,15 @@ namespace PlatformTest
         private const float Acceleration = 20f;
         private const float GroundDragFactor = 5f;
 
-        private const float MaxJumpTime = 0.35f;
-        //private const float JumpLaunchVelocity = -3500.0f;
+        private const float MaxJumpTime = 0.2f;
         private const float GravityAcceleration = 10f;
-        private const float JumpLaunchVelocity = -20f;
+        private const float JumpLaunchVelocity = -1f;
         private const float JumpControlPower = 0.14f;
-        private const float MaxFallSpeed = 5.0f;
+        private const float MaxFallSpeed = 5f;
 
         private float jumpTime;
         private bool isJumping;
-        private bool wasJumping;
+        private bool wasJumping = false;
 
         private float debugVelocityY = 0;
 
@@ -76,10 +75,10 @@ namespace PlatformTest
                         controllerDirection.Y += 1;
                         currentFrame.X = 0;
                     }
-                    else
-                    {
-                        controllerDirection.Y -= 0;
-                    }
+                    //else
+                    //{
+                    //    controllerDirection.Y -= 1;
+                    //}
                 }
                 else
                 {
@@ -93,6 +92,7 @@ namespace PlatformTest
                         facingDirecton = FacingDirection.Right;
                         controllerDirection.X += 1;
                     }
+                    //controllerDirection.Y -= 1;
                 }
 
                 return controllerDirection;
@@ -122,6 +122,13 @@ namespace PlatformTest
             if (resultingForce.X != 0)
                 ApplyFriction(gameTime);
             position += resultingForce;
+
+            // Debug - prevent from falling through floor
+            if (position.Y > 337)
+                position.Y = 337;
+
+            if (position.Y == previousPosition.Y)
+                resultingForce.Y = 0;
         }
 
         /// <summary>
@@ -136,7 +143,8 @@ namespace PlatformTest
             velocity.Y = MathHelper.Clamp(velocity.Y + GravityAcceleration * elapsed, -MaxFallSpeed, MaxFallSpeed);
             velocity.Y = DoJump(velocity.Y, gameTime);
 
-            resultingForce += (inputDirection * velocity);
+            //resultingForce += (inputDirection * velocity);
+            resultingForce += new Vector2((inputDirection.X * velocity.X), velocity.Y);
             resultingForce.X = MathHelper.Clamp(resultingForce.X, -maxSpeed.X, maxSpeed.X);
         }
 
@@ -156,7 +164,6 @@ namespace PlatformTest
                 {
                     //if (jumpTime == 0.0f)
                     //    jumpSound.Play();
-
                     jumpTime += (float)gameTime.ElapsedGameTime.TotalSeconds;
                 }
 
