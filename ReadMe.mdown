@@ -1,0 +1,7 @@
+<h1>XNA Platform Test</h1>
+ 
+<p><em>By Dean Williams</em></p>
+ 
+<p>Just messing around and learning with XNA.</p>
+ 
+<p>Any comments or helpful hints appreciated</p>
