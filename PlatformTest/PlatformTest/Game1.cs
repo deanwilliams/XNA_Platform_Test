@@ -19,9 +19,8 @@ namespace PlatformTest
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
+        LevelManager levelManager;
         SpriteManager spriteManager;
-
-        Texture2D backgroundTexture;
 
         public Game1()
         {
@@ -39,7 +38,10 @@ namespace PlatformTest
         {
             // TODO: Add your initialization logic here
             spriteManager = new SpriteManager(this);
+            levelManager = new LevelManager(this, spriteManager);
+
             Components.Add(spriteManager);
+            Components.Add(levelManager);
 
             base.Initialize();
         }
@@ -52,9 +54,6 @@ namespace PlatformTest
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
-
-            // TODO: use this.Content to load your game content here
-            backgroundTexture = Content.Load<Texture2D>(@"Images\background");
         }
 
         /// <summary>
@@ -92,9 +91,8 @@ namespace PlatformTest
 
             // TODO: Add your drawing code here
 
-            spriteBatch.Begin(SpriteSortMode.FrontToBack, BlendState.AlphaBlend);
-            spriteBatch.Draw(backgroundTexture, Vector2.Zero, Color.White);
-            spriteBatch.End();
+            //spriteBatch.Begin(SpriteSortMode.FrontToBack, BlendState.AlphaBlend);
+            //spriteBatch.End();
 
             base.Draw(gameTime);
         }

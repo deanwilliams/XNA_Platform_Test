@@ -7,10 +7,9 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace PlatformTest
 {
-    abstract class Sprite
+    public abstract class Sprite
     {
         protected Texture2D textureImage;
-        protected Vector2 position;
         protected Point frameSize;
         int collisionOffset;
         protected Point currentFrame;
@@ -19,6 +18,12 @@ namespace PlatformTest
         protected int millisecondsPerFrame;
         protected Vector2 maxSpeed;
         const int defaultMillisecondsPerFrame = 16;
+
+        public abstract Vector2 Position
+        {
+            get;
+        }
+        Vector2 position;
 
         public abstract Vector2 inputDirection
         {
@@ -30,8 +35,8 @@ namespace PlatformTest
             get
             {
                 return new Rectangle(
-                    (int)position.X + collisionOffset,
-                    (int)position.Y + collisionOffset,
+                    (int)Position.X + collisionOffset,
+                    (int)Position.Y + collisionOffset,
                     frameSize.X - (collisionOffset * 2),
                     frameSize.Y - (collisionOffset * 2));
             }
@@ -110,7 +115,7 @@ namespace PlatformTest
         public virtual void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
             spriteBatch.Draw(textureImage,
-                position,
+                Position,
                 new Rectangle(currentFrame.X * frameSize.X,
                     currentFrame.Y * frameSize.Y,
                     frameSize.X, frameSize.Y),

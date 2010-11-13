@@ -20,6 +20,11 @@ namespace PlatformTest
         SpriteFont debugFont;
 
         SpriteBatch spriteBatch;
+
+        public UserControlledSprite Player
+        {
+            get { return player; }
+        }
         UserControlledSprite player;
 
         public SpriteManager(Game game)
@@ -31,11 +36,6 @@ namespace PlatformTest
         protected override void LoadContent()
         {
             spriteBatch = new SpriteBatch(Game.GraphicsDevice);
-
-            //player = new UserControlledSprite(
-            //    Game.Content.Load<Texture2D>(@"player"),
-            //    Vector2.Zero, new Point(40, 48), 10, new Point(0, 0),
-            //    new Point(6, 8), new Vector2(6, 6), 60);
 
             player = new UserControlledSprite(
                 Game.Content.Load<Texture2D>(@"Images\player"),
@@ -79,14 +79,14 @@ namespace PlatformTest
             spriteBatch.Begin(SpriteSortMode.FrontToBack, BlendState.AlphaBlend);
             player.Draw(gameTime, spriteBatch);
 
-            spriteBatch.DrawString(debugFont, "Input Direction X = " + player.GetInputDirectionX(), new Vector2(10, 10), Color.White, 0, Vector2.Zero, 1, SpriteEffects.None, 1);
-            spriteBatch.DrawString(debugFont, "Input Direction Y = " + player.GetInputDirectionY(), new Vector2(10, 30), Color.White, 0, Vector2.Zero, 1, SpriteEffects.None, 1);
-            spriteBatch.DrawString(debugFont, "Resulting Force X = " + player.GetResultingForceX(), new Vector2(10, 50), Color.White, 0, Vector2.Zero, 1, SpriteEffects.None, 1);
-            spriteBatch.DrawString(debugFont, "Resulting Force Y = " + player.GetResultingForceY(), new Vector2(10, 70), Color.White, 0, Vector2.Zero, 1, SpriteEffects.None, 1);
-            spriteBatch.DrawString(debugFont, "Velocity Y = " + player.GetDebugVelocityY(), new Vector2(10, 90), Color.White, 0, Vector2.Zero, 1, SpriteEffects.None, 1);
-            spriteBatch.DrawString(debugFont, "Jump Time = " + player.GetJumpTime(), new Vector2(10, 110), Color.White, 0, Vector2.Zero, 1, SpriteEffects.None, 1);
-            spriteBatch.DrawString(debugFont, "Is Jumping = " + player.GetIsJumping(), new Vector2(10, 130), Color.White, 0, Vector2.Zero, 1, SpriteEffects.None, 1);
-            spriteBatch.DrawString(debugFont, "Was Jumping = " + player.GetWasJumping(), new Vector2(10, 150), Color.White, 0, Vector2.Zero, 1, SpriteEffects.None, 1);
+            //spriteBatch.DrawString(debugFont, "Input Direction X = " + player.GetInputDirectionX(), new Vector2(10, 10), Color.White, 0, Vector2.Zero, 1, SpriteEffects.None, 1);
+            //spriteBatch.DrawString(debugFont, "Input Direction Y = " + player.GetInputDirectionY(), new Vector2(10, 30), Color.White, 0, Vector2.Zero, 1, SpriteEffects.None, 1);
+            //spriteBatch.DrawString(debugFont, "Resulting Force X = " + player.GetResultingForceX(), new Vector2(10, 50), Color.White, 0, Vector2.Zero, 1, SpriteEffects.None, 1);
+            //spriteBatch.DrawString(debugFont, "Resulting Force Y = " + player.GetResultingForceY(), new Vector2(10, 70), Color.White, 0, Vector2.Zero, 1, SpriteEffects.None, 1);
+            //spriteBatch.DrawString(debugFont, "Velocity Y = " + player.GetDebugVelocityY(), new Vector2(10, 90), Color.White, 0, Vector2.Zero, 1, SpriteEffects.None, 1);
+            //spriteBatch.DrawString(debugFont, "Jump Time = " + player.GetJumpTime(), new Vector2(10, 110), Color.White, 0, Vector2.Zero, 1, SpriteEffects.None, 1);
+            //spriteBatch.DrawString(debugFont, "Is Jumping = " + player.GetIsJumping(), new Vector2(10, 130), Color.White, 0, Vector2.Zero, 1, SpriteEffects.None, 1);
+            //spriteBatch.DrawString(debugFont, "Was Jumping = " + player.GetWasJumping(), new Vector2(10, 150), Color.White, 0, Vector2.Zero, 1, SpriteEffects.None, 1);
 
             spriteBatch.End();
 

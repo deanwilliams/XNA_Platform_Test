@@ -8,7 +8,7 @@ using Microsoft.Xna.Framework.Input;
 
 namespace PlatformTest
 {
-    class UserControlledSprite: Sprite
+    public class UserControlledSprite: Sprite
     {
         public enum PlayerState
         {
@@ -43,6 +43,15 @@ namespace PlatformTest
         private float debugVelocityY = 0;
 
         private Vector2 resultingForce;
+
+        public override Vector2 Position
+        {
+            get
+            {
+                return position;
+            }
+        }
+        Vector2 position;
 
         public override Vector2 inputDirection
         {
@@ -116,7 +125,7 @@ namespace PlatformTest
         /// <param name="clientBounds"></param>
         public override void Update(GameTime gameTime, Rectangle clientBounds)
         {
-            Vector2 previousPosition = position;
+            Vector2 previousPosition = Position;
             CalculateCurrentFrame(gameTime);
             ApplyAcceleration(gameTime);
             if (resultingForce.X != 0)
@@ -127,7 +136,7 @@ namespace PlatformTest
             if (position.Y > 337)
                 position.Y = 337;
 
-            if (position.Y == previousPosition.Y)
+            if (Position.Y == previousPosition.Y)
                 resultingForce.Y = 0;
         }
 
@@ -301,7 +310,7 @@ namespace PlatformTest
                 effect = SpriteEffects.FlipHorizontally;
 
             spriteBatch.Draw(textureImage,
-                position,
+                Position,
                 new Rectangle(currentFrame.X * frameSize.X,
                     currentFrame.Y * frameSize.Y,
                     frameSize.X, frameSize.Y),
