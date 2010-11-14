@@ -8,6 +8,7 @@ using Microsoft.Xna.Framework.GamerServices;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
+using System.IO;
 
 
 namespace PlatformTest
@@ -20,6 +21,8 @@ namespace PlatformTest
         SpriteFont debugFont;
 
         SpriteBatch spriteBatch;
+
+        private const float EntityLayer = 1f;
 
         public UserControlledSprite Player
         {
@@ -77,7 +80,7 @@ namespace PlatformTest
         public override void Draw(GameTime gameTime)
         {
             spriteBatch.Begin(SpriteSortMode.FrontToBack, BlendState.AlphaBlend);
-            player.Draw(gameTime, spriteBatch);
+            player.Draw(gameTime, spriteBatch, EntityLayer);
             spriteBatch.End();
 
             base.Draw(gameTime);

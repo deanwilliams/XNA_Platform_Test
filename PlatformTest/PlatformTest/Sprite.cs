@@ -112,7 +112,7 @@ namespace PlatformTest
         /// </summary>
         /// <param name="gameTime"></param>
         /// <param name="spriteBatch"></param>
-        public virtual void Draw(GameTime gameTime, SpriteBatch spriteBatch)
+        public virtual void Draw(GameTime gameTime, SpriteBatch spriteBatch, float drawLayer)
         {
             spriteBatch.Draw(textureImage,
                 Position,
@@ -120,7 +120,7 @@ namespace PlatformTest
                     currentFrame.Y * frameSize.Y,
                     frameSize.X, frameSize.Y),
                 Color.White, 0, Vector2.Zero,
-                1f, SpriteEffects.None, 0);
+                1f, SpriteEffects.None, drawLayer);
         }
     }
 }

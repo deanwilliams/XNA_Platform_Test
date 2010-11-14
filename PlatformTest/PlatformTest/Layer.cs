@@ -4,6 +4,7 @@ using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Content;
+using System.IO;
 
 namespace PlatformTest
 {
@@ -36,7 +37,7 @@ namespace PlatformTest
         /// </summary>
         /// <param name="spriteBatch"></param>
         /// <param name="cameraPosition"></param>
-        public void Draw(SpriteBatch spriteBatch, float cameraPosition)
+        public void Draw(SpriteBatch spriteBatch, float cameraPosition, int drawLayer)
         {
             // Assume each segment is the same width.
             int segmentWidth = Textures[0].Width;

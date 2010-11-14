@@ -5,6 +5,7 @@ using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System.IO;
 
 namespace PlatformTest
 {
@@ -28,7 +29,7 @@ namespace PlatformTest
         private FacingDirection facingDirecton = FacingDirection.Right;
 
         private const float Acceleration = 20f;
-        private const float GroundDragFactor = 5f;
+        private const float GroundDragFactor = 8f;
 
         private const float MaxJumpTime = 0.2f;
         private const float GravityAcceleration = 10f;
@@ -264,7 +265,7 @@ namespace PlatformTest
         /// </summary>
         /// <param name="gameTime"></param>
         /// <param name="spriteBatch"></param>
-        public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
+        public override void Draw(GameTime gameTime, SpriteBatch spriteBatch, float drawLayer)
         {
             SpriteEffects effect = SpriteEffects.None;
             if (facingDirecton == FacingDirection.Left)
@@ -276,7 +277,7 @@ namespace PlatformTest
                     currentFrame.Y * frameSize.Y,
                     frameSize.X, frameSize.Y),
                 Color.White, 0, Vector2.Zero,
-                1f, effect, 0);
+                1f, effect, drawLayer);
         }
     }
 }

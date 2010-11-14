@@ -40,8 +40,8 @@ namespace PlatformTest
             spriteManager = new SpriteManager(this);
             levelManager = new LevelManager(this, spriteManager);
 
-            Components.Add(spriteManager);
             Components.Add(levelManager);
+            Components.Add(spriteManager);
 
             base.Initialize();
         }
