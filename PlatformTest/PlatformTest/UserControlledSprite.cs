@@ -44,6 +44,9 @@ namespace PlatformTest
 
         private Vector2 resultingForce;
 
+        /// <summary>
+        /// Get current player position
+        /// </summary>
         public override Vector2 Position
         {
             get
@@ -53,6 +56,9 @@ namespace PlatformTest
         }
         Vector2 position;
 
+        /// <summary>
+        /// Get the input direction
+        /// </summary>
         public override Vector2 inputDirection
         {
             get
@@ -84,10 +90,6 @@ namespace PlatformTest
                         controllerDirection.Y += 1;
                         currentFrame.X = 0;
                     }
-                    //else
-                    //{
-                    //    controllerDirection.Y -= 1;
-                    //}
                 }
                 else
                 {
@@ -101,7 +103,6 @@ namespace PlatformTest
                         facingDirecton = FacingDirection.Right;
                         controllerDirection.X += 1;
                     }
-                    //controllerDirection.Y -= 1;
                 }
 
                 return controllerDirection;
@@ -216,46 +217,6 @@ namespace PlatformTest
                 resultingForce += friction;
             if (resultingForce.X < 0 && originalForce.X > 0 || resultingForce.X > 0 && originalForce.X < 0)
                 resultingForce.X = 0;
-        }
-
-        public float GetInputDirectionX()
-        {
-            return inputDirection.X;
-        }
-
-        public float GetInputDirectionY()
-        {
-            return inputDirection.Y;
-        }
-
-        public float GetResultingForceX()
-        {
-            return resultingForce.X;
-        }
-
-        public float GetResultingForceY()
-        {
-            return resultingForce.Y;
-        }
-
-        public float GetDebugVelocityY()
-        {
-            return debugVelocityY;
-        }
-
-        public float GetJumpTime()
-        {
-            return jumpTime;
-        }
-
-        public bool GetIsJumping()
-        {
-            return isJumping;
-        }
-
-        public bool GetWasJumping()
-        {
-            return wasJumping;
         }
 
         /// <summary>

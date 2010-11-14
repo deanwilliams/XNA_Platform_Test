@@ -20,7 +20,9 @@ namespace PlatformTest
         /// </summary>
         public int Width
         {
-            get { return tiles.GetLength(0); }
+            get { //return tiles.GetLength(0);
+                return 400; // Debug
+            }
         }
 
         private float cameraPosition;
@@ -33,7 +35,6 @@ namespace PlatformTest
         {
             get { return spriteManager.Player; }
         }
-        UserControlledSprite player;
 
         /// <summary>
         /// Constructor
@@ -75,10 +76,14 @@ namespace PlatformTest
 
             ScrollCamera(spriteBatch.GraphicsDevice.Viewport);
             Matrix cameraTransform = Matrix.CreateTranslation(-cameraPosition, 0.0f, 0.0f);
+            
             spriteBatch.Begin(SpriteSortMode.FrontToBack, BlendState.AlphaBlend, null, null, null, null, cameraTransform);
+
             for (int i = EntityLayer + 1; i < layers.Length; ++i)
                 layers[i].Draw(spriteBatch, cameraPosition);
             spriteBatch.End();
+
+            base.Draw(gameTime);
         }
 
         /// <summary>
@@ -96,7 +101,7 @@ namespace PlatformTest
 
             // Calculate how far to scroll when the player is near the edges of the screen.
             float cameraMovement = 0.0f;
-            if (player.Position.X < marginLeft)
+            if (Player.Position.X < marginLeft)
                 cameraMovement = Player.Position.X - marginLeft;
             else if (Player.Position.X > marginRight)
                 cameraMovement = Player.Position.X - marginRight;
