@@ -113,11 +113,13 @@ namespace PlatformTest
         public UserControlledSprite(Texture2D textureImage, Vector2 position, Point frameSize, int collisionOffset, Point currentFrame, Point sheetSize, Vector2 maxSpeed)
             : base(textureImage, position, frameSize, collisionOffset, currentFrame, sheetSize, maxSpeed)
         {
+            this.position = position;
         }
 
         public UserControlledSprite(Texture2D textureImage, Vector2 position, Point frameSize, int collisionOffset, Point currentFrame, Point sheetSize, Vector2 maxSpeed, int millisecondsPerFrame)
             : base(textureImage, position, frameSize, collisionOffset, currentFrame, sheetSize, maxSpeed, millisecondsPerFrame)
         {
+            this.position = position;
         }
 
         /// <summary>
